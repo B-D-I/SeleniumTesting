@@ -1,10 +1,7 @@
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +10,6 @@ public class HomePageTests {
 
     protected WebDriver driver;
     protected JavascriptExecutor jse;
-    protected WebElement pMassage;
     //Create Browser Driver and JavaScript Executor
     @BeforeClass
     public void testSetup() {
@@ -45,21 +41,8 @@ public class HomePageTests {
         Assert.assertTrue(logo.isDisplayed(), "Logo is not displayed");
     }
 
-    @Test
-    public void testBowserInfo(){
-        WebElement bowserInfo = driver.findElement(By.id("viewBowserInformation"));
-        bowserInfo.click();
-        Set<String> window = driver.getWindowHandles();
-        Iterator<String> i = window.iterator();
-        String mainWindow = i.next();
-        String popupWindow = i.next();
-        driver.switchTo().window(popupWindow);
-        driver.close();
-        driver.switchTo().window(mainWindow);
-    }
-
+    // LOGIN TESTS
     public void openLogin(){
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         WebElement login = driver.findElement(By.id("loginLink"));
         login.click();
         // wait for modal to load
@@ -109,7 +92,6 @@ public class HomePageTests {
     @Test
     public void testIncorrectLogin(){
         String incorrectText = "Incorrect Login";
-
         openLogin();
 
         WebElement username = returnUsernameField();
@@ -124,108 +106,100 @@ public class HomePageTests {
 
         Assert.assertEquals(alert.getText(), incorrectText);
         alert.accept();
-        logout();
     }
 
-    // also test password strength
+    @Test
+    public void testBowserInfo(){
+        WebElement bowserInfo = driver.findElement(By.id("viewBowserInformation"));
+        bowserInfo.click();
+        Set<String> window = driver.getWindowHandles();
+        Iterator<String> i = window.iterator();
+        String mainWindow = i.next();
+        String popupWindow = i.next();
+        driver.switchTo().window(popupWindow);
+        driver.close();
+        driver.switchTo().window(mainWindow);
+    }
 
-//    @Test
-//    public void testIncorrectLogin(WebElement username, WebElement password, WebElement submit){
-//        String incorrectLoginText = "Incorrect Login";
-//        username.sendKeys("testUser@email.com");
-//        password.sendKeys("xxxxx");
-//        submit.click();
-//        // view alert
-//        Alert alert=driver.switchTo().alert();
-//        System.out.println(alert.getText());
-//        // test login
-//        Assert.assertEquals(alert.getText(), loginText);
-//        alert.accept();
-//    }
-//
-//
-//    @Test
-//    public void testNavs(){
-//
-//    }
+    // REGISTRATION TESTS
+    public void openRegister(){
+        WebElement register = driver.findElement(By.id("registrationTab"));
+        register.click();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+    }
+    public WebElement returnEmailField(){
+        WebElement email = driver.findElement(By.id("registerInputEmail"));
+        return email;
+    }
+    public WebElement returnRegPasswordField(){
+        WebElement password_create = driver.findElement(By.id("password_create"));
+        return password_create;
+    }
+    public WebElement returnPasswordConfirmField(){
+        WebElement password_confirm = driver.findElement(By.id("password_confirm"));
+        return password_confirm;
+    }
+    public WebElement returnRegSubmitButton(){
+        WebElement regSubmit = driver.findElement(By.id("registerAccountSubmit"));
+        return regSubmit;
+    }
+    public WebElement returnRegModalClose(){
+        WebElement regClose = driver.findElement(By.id("registerModalClose"));
+        return regClose;
+    }
 
-//    @Test()
-//    public void testLogin(){
-//        WebDriverWait wait = new WebDriverWait(driver,30);
-//        // find email and password inputs and insert credentials
-//        WebElement username = driver.findElement(By.id("loginInputEmail1"));
-//        WebElement password = driver.findElement(By.id("loginInputPassword1"));
-//        WebElement submit = driver.findElement(By.id("loginSubmit"));
-//        WebElement login = driver.findElement(By.id("loginLink"));
-//        username.sendKeys("testUser@email.com");
-//        password.sendKeys("!1Ppaaaaaa");
-        // open model
-//        login.click();
+    @Test
+    public void testPasswordsMatch(){
+        openRegister();
+        WebElement email = returnEmailField();
+        WebElement password = returnRegPasswordField();
+        WebElement confirmPassword = returnPasswordConfirmField();
+        WebElement submit = returnRegSubmitButton();
+        WebElement close = returnRegModalClose();
 
-//        // submit login
-//        submit.click();
-//        // redirect
-//        String actualUrl="https://grp20224-ct5038.uogs.co.uk/home/index.php";
-//        String expectedUrl= driver.getCurrentUrl();
-//        Assert.assertEquals(expectedUrl,actualUrl);
- //   }
+        email.sendKeys("test@email.com");
+        password.sendKeys("!1Ppaaaaaa");
+        confirmPassword.sendKeys("!1Ppxxxxxx");
+        submit.click();
+        submit.click();
+        String alertType = "Password is strong, but passwords do NOT match!\n\n";
 
-//    //Test Case to Create Product
-//    //Belows to a group so that tear down works for only this group
-//    @Test(groups= {"createProduct"})
-//    public void createProduct() {
-//        WebElement txtName = driver.findElement(By.name("name"));
-//        WebElement txtDesc = driver.findElement(By.name("description"));
-//        WebElement txtLat = driver.findElement(By.name("lat"));
-//        WebElement txtLng = driver.findElement(By.name("lng"));
-//        WebElement btnSubmit = driver.findElement(By.name("submit"));
-//
-//        Actions builder = new Actions(driver);
-//        Action addNameValue = builder.sendKeys(txtName, Keys.CONTROL, "Mobile").build();
-//        addNameValue.perform();
-//        //builder.pause(2000);
-//
-//        Action addDescValue = builder.sendKeys(txtDesc, Keys.CONTROL, "iPhone X").build();
-//        addDescValue.perform();
-//        //builder.pause(2000);
-//
-//        jse.executeScript("document.getElementsByName('lat')[0].setAttribute('type', 'text')");
-//        jse.executeScript("document.getElementsByName('lat')[0].value = '';");
-//
-//        jse.executeScript("document.getElementsByName('lng')[0].setAttribute('type', 'text')");
-//        jse.executeScript("document.getElementsByName('lng')[0].value = '';");
-//
-//        Action addLatValue = builder.sendKeys(txtLat, Keys.CONTROL, "51.90299028077605").build();
-//        addLatValue.perform();
-//
-//        Action addLngValue = builder.sendKeys(txtLng, Keys.CONTROL, "-2.1029017359495796").build();
-//        addLngValue.perform();
-//
-//        btnSubmit.click();
-//
-//        pMassage = driver.findElement(By.name("message"));
-//
-//        Assert.assertEquals(pMassage.getText(), "Product created successfully.");
-//    }
-//
-//    //Tear down to Delete Product
-//    @AfterGroups("createProduct")
-//    public void deleteProduct() {
-//        jse.executeScript("document.getElementsByName('productTableForm')[0].submit();");
-//        try {
-//            Thread.sleep(2000);
-//
-//        } catch (java.lang.InterruptedException e) {
-//            System.out.println(e.toString());
-//        }
-//
-//        pMassage = driver.findElement(By.name("message"));
-//        if(pMassage.getText().equals("product deleted successfully")) {
-//            System.out.println("Test Passed: Product deleted successfully");
-//        } else {
-//            System.out.println("Test Failed: Error " + pMassage.getText());
-//        }
-//    }
+        Alert alert=driver.switchTo().alert();
+        String alertText = alert.getText();
+        System.out.println(alert.getText());
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        alert.accept();
+        Assert.assertEquals(alertText, alertType);
+        close.click();
+    }
+
+    @Test
+    public void testPasswordStrength(){
+        openRegister();
+        WebElement email = returnEmailField();
+        WebElement password = returnRegPasswordField();
+        WebElement confirmPassword = returnPasswordConfirmField();
+        WebElement submit = returnRegSubmitButton();
+        WebElement close = returnRegModalClose();
+
+        email.sendKeys("test@email.com");
+        password.sendKeys("password1");
+        confirmPassword.sendKeys("password1");
+        submit.click();
+        submit.click();
+
+        String alertType = "Passwords do NOT match and is NOT strong enough! \n\nMust contain upper and lowercase letters, numbers and symbols\n";
+
+        Alert alert=driver.switchTo().alert();
+        String alertText = alert.getText();
+        System.out.println(alert.getText());
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        alert.accept();
+        Assert.assertEquals(alertText, alertType);
+        close.click();
+    }
 
     //Close the Driver
     @AfterClass

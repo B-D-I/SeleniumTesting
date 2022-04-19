@@ -5,8 +5,8 @@
     <classes>
       <class name="HomePageTests">
         <methods>
-          <include name="testIncorrectLogin"/>
           <include name="openBrowser"/>
+          <include name="testPasswordStrength"/>
           <include name="testSetup"/>
           <include name="afterClass"/>
         </methods>
