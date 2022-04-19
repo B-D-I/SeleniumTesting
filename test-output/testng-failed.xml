@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [Default Suite]">
+  <test name="seleniumBowserAppTests(failed)">
+    <classes>
+      <class name="HomePageTests">
+        <methods>
+          <include name="testIncorrectLogin"/>
+          <include name="openBrowser"/>
+          <include name="testSetup"/>
+          <include name="afterClass"/>
+        </methods>
+      </class> <!-- HomePageTests -->
+    </classes>
+  </test> <!-- seleniumBowserAppTests(failed) -->
+</suite> <!-- Failed suite [Default Suite] -->
